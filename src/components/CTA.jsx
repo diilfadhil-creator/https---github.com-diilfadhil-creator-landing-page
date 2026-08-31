@@ -14,7 +14,7 @@ export default function CTA({ onOpenUpload }) {
   };
 
   const handleHelpWhatsApp = () => {
-    const msg = `Halo Admin PasarHub! Saya ingin berkonsultasi mengenai cara memaksimalkan jualan online produk saya di platform PasarHub. Email saya: ${email || 'seller@gmail.com'}.`;
+    const msg = `Halo Admin Marketplace! Saya ingin berkonsultasi mengenai cara memaksimalkan jualan online produk saya di platform Marketplace. Email saya: ${email || 'seller@gmail.com'}.`;
     window.open(getWhatsAppUrl(msg), '_blank');
   };
 
@@ -32,7 +32,7 @@ export default function CTA({ onOpenUpload }) {
             </div>
 
             <h2 className="cta-title">
-              Punya Barang yang Ingin Dijual? Pasang Iklan Produkmu di <span className="gradient-text-food">PasarHub Sekarang!</span>
+              Punya Barang yang Ingin Dijual? Pasang Iklan Produkmu di <span className="gradient-text-food">Marketplace Sekarang!</span>
             </h2>
 
             <p className="cta-desc">
@@ -52,7 +52,7 @@ export default function CTA({ onOpenUpload }) {
             {submitted ? (
               <div className="cta-success-msg animated-fade-in border-amber mt-6">
                 <CheckCircle2 size={24} className="text-amber" />
-                <span>Terima kasih! Tim PasarHub akan mengirimkan tips jualan laris ke email Anda.</span>
+                <span>Terima kasih! Tim Marketplace akan mengirimkan tips jualan laris ke email Anda.</span>
                 <div className="mt-4">
                   <button 
                     onClick={handleHelpWhatsApp}

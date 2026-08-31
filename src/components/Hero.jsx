@@ -64,7 +64,7 @@ export default function Hero({ onOpenUpload }) {
         {/* Hero Headline */}
         <h1 className="hero-title">
           Jual & Beli Produk Apa Saja dengan Cepat di{' '}
-          <span className="gradient-text-food">PasarHub Nusantara</span>
+          <span className="gradient-text-food">Marketplace Nusantara</span>
         </h1>
 
         {/* Subtitle */}

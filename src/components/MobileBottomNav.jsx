@@ -4,7 +4,7 @@ import { getWhatsAppUrl } from '../config/whatsapp';
 
 export default function MobileBottomNav({ onOpenUpload, onOpenCart, cartCount = 0 }) {
   const handleOpenWhatsApp = () => {
-    window.open(getWhatsAppUrl('Halo Admin PasarHub! Saya ingin bertanya seputar produk.'), '_blank');
+    window.open(getWhatsAppUrl('Halo Admin Marketplace! Saya ingin bertanya seputar produk.'), '_blank');
   };
 
   return (

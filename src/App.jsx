@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductCatalog from './components/ProductCatalog';
@@ -16,11 +16,13 @@ import ProductUploadModal from './components/ProductUploadModal';
 import ProductDetailModal from './components/ProductDetailModal';
 import CartDrawer from './components/CartDrawer';
 import { 
-  getStoredProducts, 
-  addProductToStorage, 
-  deleteProductFromStorage, 
-  resetProductsToDefault 
-} from './config/marketplaceData';
+  fetchPublicProducts, 
+  createPublicProduct, 
+  deletePublicProduct, 
+  subscribeToProductChanges,
+  isCloudConnected 
+} from './services/productService';
+import { resetProductsToDefault } from './config/marketplaceData';
 import './App.css';
 
 export default function App() {
@@ -30,33 +32,86 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const isCloud = isCloudConnected();
 
-  // Muat data awal dari localStorage
-  useEffect(() => {
-    const loaded = getStoredProducts();
-    setProducts(loaded);
+  // Muat data produk dari Cloud Database / LocalStorage
+  const loadProducts = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchPublicProducts();
+      setProducts(data || []);
+    } catch (err) {
+      console.error('Gagal memuat produk:', err);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadProducts();
+
+    // Aktifkan Realtime Listener jika Cloud Database aktif
+    const unsubscribe = subscribeToProductChanges((payload) => {
+      if (payload.eventType === 'INSERT' && payload.new) {
+        setProducts((prev) => {
+          const exists = prev.some((p) => p.id === payload.new.id);
+          if (exists) return prev;
+          return [payload.new, ...prev];
+        });
+        showToast(`✨ Produk baru ditambahkan oleh penjual: "${payload.new.name}"`);
+      } else if (payload.eventType === 'DELETE' && payload.old) {
+        setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+      } else if (payload.eventType === 'UPDATE' && payload.new) {
+        setProducts((prev) =>
+          prev.map((p) => (p.id === payload.new.id ? payload.new : p))
+        );
+      }
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [loadProducts]);
 
   // Show Toast
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage('');
-    }, 3000);
+    }, 3500);
   };
 
   // Upload Produk Baru
-  const handleProductUploaded = (newProduct) => {
-    const updated = addProductToStorage(newProduct);
-    setProducts(updated);
-    showToast(`Produk "${newProduct.name}" berhasil ditayangkan!`);
+  const handleProductUploaded = async (newProduct) => {
+    try {
+      const saved = await createPublicProduct(newProduct);
+      setProducts((prev) => {
+        const filtered = prev.filter((p) => p.id !== saved.id);
+        return [saved, ...filtered];
+      });
+
+      if (isCloud) {
+        showToast(`☁️ Produk "${saved.name}" berhasil dipublikasikan ke Cloud Database!`);
+      } else {
+        showToast(`📦 Produk "${saved.name}" berhasil ditayangkan (Mode Lokal)!`);
+      }
+    } catch (err) {
+      console.error('Error saat upload:', err);
+      showToast(`⚠️ Produk tersimpan di perangkat lokal.`);
+    }
   };
 
   // Hapus Produk
-  const handleDeleteProduct = (productId) => {
-    const updated = deleteProductFromStorage(productId);
-    setProducts(updated);
-    showToast('Produk berhasil dihapus.');
+  const handleDeleteProduct = async (productId) => {
+    try {
+      const updated = await deletePublicProduct(productId);
+      setProducts(updated || []);
+      showToast('Produk berhasil dihapus.');
+    } catch (err) {
+      console.error('Gagal menghapus produk:', err);
+      showToast('Gagal menghapus produk.');
+    }
   };
 
   // Reset Produk ke Default
@@ -120,6 +175,7 @@ export default function App() {
         onOpenUpload={() => setIsUploadOpen(true)}
         onOpenCart={() => setIsCartOpen(true)}
         cartCount={cartTotalItems}
+        isCloudConnected={isCloud}
       />
 
       <main>
@@ -129,6 +185,9 @@ export default function App() {
         {/* Centerpiece: Product Catalog */}
         <ProductCatalog 
           products={products}
+          isLoading={isLoading}
+          isCloudConnected={isCloud}
+          onRefresh={loadProducts}
           onSelectProduct={(prod) => setSelectedProduct(prod)}
           onOpenUpload={() => setIsUploadOpen(true)}
           onAddToCart={handleAddToCart}
@@ -159,11 +218,12 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer onOpenUpload={() => setIsUploadOpen(true)} />
+      <Footer onOpenUpload={() => setIsUploadOpen(true)} isCloudConnected={isCloud} />
 
       {/* Modals & Drawers */}
       <ProductUploadModal 
         isOpen={isUploadOpen}
+        isCloudConnected={isCloud}
         onClose={() => setIsUploadOpen(false)}
         onProductUploaded={handleProductUploaded}
       />

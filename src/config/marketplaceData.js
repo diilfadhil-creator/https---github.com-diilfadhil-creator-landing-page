@@ -227,12 +227,13 @@ export const INITIAL_PRODUCTS = [
   }
 ];
 
-const LOCAL_STORAGE_KEY = 'pasarhub_user_products_v1';
+const LOCAL_STORAGE_KEY = 'marketplace_user_products_v1';
+const LEGACY_STORAGE_KEY = 'pasarhub_user_products_v1';
 
 // Ambil semua produk (dari LocalStorage jika ada, atau gunakan default)
 export function getStoredProducts() {
   try {
-    const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const localData = localStorage.getItem(LOCAL_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
     if (localData) {
       const parsed = JSON.parse(localData);
       if (Array.isArray(parsed) && parsed.length > 0) {

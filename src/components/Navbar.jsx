@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Store, ShoppingBag, Plus, Menu, X, 
-  Sparkles, Search, MessageCircle, ArrowRight 
+  Sparkles, Search, MessageCircle, ArrowRight, Cloud, CloudCheck
 } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
-export default function Navbar({ onOpenUpload, onOpenCart, cartCount = 0 }) {
+export default function Navbar({ onOpenUpload, onOpenCart, cartCount = 0, isCloudConnected = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -27,7 +27,7 @@ export default function Navbar({ onOpenUpload, onOpenCart, cartCount = 0 }) {
             <Store className="logo-icon text-white" size={22} />
           </div>
           <span className="logo-text">
-            Pasar<span className="gradient-text-food">Hub</span>
+            Market<span className="gradient-text-food">place</span>
             <span className="logo-badge badge-halal">0% ADMIN FEE</span>
           </span>
         </a>

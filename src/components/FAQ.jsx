@@ -6,7 +6,7 @@ export default function FAQ() {
 
   const faqs = [
     {
-      q: 'Bagaimana cara saya mengunggah dan menjual produk di PasarHub?',
+      q: 'Bagaimana cara saya mengunggah dan menjual produk di Marketplace?',
       a: 'Sangat mudah! Cukup klik tombol "+ Jual Produk" di navigasi atas atau banner, unggah foto barang dari HP/komputer Anda, lengkapi nama produk, kategori, harga jual, dan nomor WhatsApp Anda. Setelah klik "Publikasikan", produk Anda langsung tayang di katalog seketika.'
     },
     {
@@ -39,7 +39,7 @@ export default function FAQ() {
           <span className="tag tag-amber">
             <Sparkles size={14} className="inline mr-1" /> Pusat Bantuan & FAQ
           </span>
-          <h2>Pertanyaan Seputar <span className="gradient-text-food">PasarHub</span></h2>
+          <h2>Pertanyaan Seputar <span className="gradient-text-food">Marketplace</span></h2>
           <p>Jawaban atas pertanyaan yang paling sering diajukan seputar upload produk, transaksi aman, dan sistem WhatsApp.</p>
         </div>
 

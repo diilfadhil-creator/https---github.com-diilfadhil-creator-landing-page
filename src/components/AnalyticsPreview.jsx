@@ -12,7 +12,7 @@ export default function AnalyticsPreview() {
       { label: 'Transaksi COD (Ketemuan)', value: 'Gunakan opsi COD di tempat ramai/publik untuk memeriksa fisik barang sebelum membayar.' },
       { label: 'Verifikasi Foto Asli', value: 'Pembeli berhak meminta foto/video real-time barang dengan watermark tulisan nama via WhatsApp.' },
       { label: 'Pembayaran Rekber/Transfer', value: 'Pastikan nomor rekening sesuai dengan identitas penjual yang terverifikasi.' },
-      { label: 'Laporkan Penjual Bermasalah', value: 'Tim pengawas PasarHub siap menindak tegas setiap iklan yang melanggar aturan.' }
+      { label: 'Laporkan Penjual Bermasalah', value: 'Tim pengawas Marketplace siap menindak tegas setiap iklan yang melanggar aturan.' }
     ],
     delivery: [
       { label: 'Pilihan Ekspedisi Fleksibel', value: 'Mendukung pengiriman reguler (JNE, J&T, SiCepat) & kurir instan (GoSend, GrabExpress).' },
@@ -35,7 +35,7 @@ export default function AnalyticsPreview() {
           <div className="analytics-header">
             <div>
               <span className="tag tag-amber">Keamanan & Panduan Transaksi</span>
-              <h2>Standar Kepercayaan <span className="gradient-text-food">PasarHub</span></h2>
+              <h2>Standar Kepercayaan <span className="gradient-text-food">Marketplace</span></h2>
             </div>
             
             {/* Category Switcher */}

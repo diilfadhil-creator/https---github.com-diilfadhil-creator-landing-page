@@ -25,7 +25,7 @@ export function getWhatsAppUrl(customMessage, targetPhone = DEFAULT_ADMIN_PHONE)
 export function getProductWhatsAppUrl(product, buyerInfo = null) {
   const targetPhone = formatPhoneNumber(product.sellerPhone || DEFAULT_ADMIN_PHONE);
   let msg = `Halo Kak *${product.sellerName || 'Penjual'}*! 👋\n` +
-    `Saya melihat produk Anda di Marketplace *PasarHub / LapakNusantara*:\n\n` +
+    `Saya melihat produk Anda di *Marketplace Nusantara*:\n\n` +
     `🛍️ *Nama Produk*: ${product.name}\n` +
     `🏷️ *Kategori*: ${product.category?.toUpperCase() || 'UMUM'}\n` +
     `✨ *Kondisi*: ${product.condition || 'Baru'}\n` +

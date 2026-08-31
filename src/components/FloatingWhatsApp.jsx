@@ -8,7 +8,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Halo! 👋 Saya *PasarBot* (Asisten Cerdas PasarHub). Ada yang bisa saya bantu terkait jual beli produk hari ini?',
+      text: 'Halo! 👋 Saya *MarketBot* (Asisten Cerdas Marketplace). Ada yang bisa saya bantu terkait jual beli produk hari ini?',
       time: 'Baru saja'
     }
   ]);
@@ -24,7 +24,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
   const botResponses = {
     jual: `📦 *CARA UPLOAD & JUAL PRODUK:*\n1. Klik tombol *+ Jual Produk* di menu atas\n2. Masukkan foto, nama barang, harga, dan No. WhatsApp Anda\n3. Klik Publikasikan — Produk Anda seketika muncul di katalog publik (100% Bebas Biaya Admin)!`,
     beli: `🛍️ *CARA BELI BARANG:*\n1. Pilih produk yang Anda sukai di etalase\n2. Klik tombol *Detail* atau *Beli*\n3. Anda akan langsung terhubung ke WhatsApp penjual untuk konfirmasi pemesanan & pengiriman!`,
-    admin: `💰 *BIAYA ADMIN 0% (GRATIS):*\nPasarHub 100% gratis selamanya tanpa potongan komisi penjualan. Semua hasil transaksi masuk utuh ke rekening penjual.`,
+    admin: `💰 *BIAYA ADMIN 0% (GRATIS):*\nMarketplace 100% gratis selamanya tanpa potongan komisi penjualan. Semua hasil transaksi masuk utuh ke rekening penjual.`,
     booster: `🚀 *PAKET BOOSTER SELLER:*\nIngin produk Anda berada di urutan paling atas dengan badge Emas 'FEATURED'? Cukup pilih Paket Booster di bagian bawah halaman!`,
     kontak: `Silakan hubungi WhatsApp Admin resmi kami untuk bantuan operasional atau verifikasi toko! 😊`
   };
@@ -62,7 +62,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
   };
 
   const handleDirectWhatsApp = () => {
-    const waUrl = getWhatsAppUrl(`Halo Admin PasarHub! Saya ingin bertanya mengenai marketplace dan fitur upload produk.`);
+    const waUrl = getWhatsAppUrl(`Halo Admin Marketplace! Saya ingin bertanya mengenai marketplace dan fitur upload produk.`);
     window.open(waUrl, '_blank');
   };
 
@@ -77,7 +77,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
               <span className="wa-status-dot"></span>
             </div>
             <div className="wa-header-text">
-              <h4>PasarBot 🤖 (Asisten Marketplace)</h4>
+              <h4>MarketBot 🤖 (Asisten Marketplace)</h4>
               <p>Aktif 24/7 • Respons Cepat</p>
             </div>
             <button className="wa-close-btn" onClick={() => setIsOpen(false)} aria-label="Tutup Bot">
@@ -88,7 +88,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
           {/* Chat Messages Body */}
           <div className="wa-popup-body custom-scroll">
             <div className="bot-welcome-tag">
-              <span>🤖 Asisten PasarHub Siap Membantu Anda</span>
+              <span>🤖 Asisten Marketplace Siap Membantu Anda</span>
             </div>
 
             {messages.map((msg, index) => (
@@ -166,7 +166,7 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
       >
         <Bot size={28} />
         <span className="wa-badge-notif">🤖</span>
-        <span className="floating-wa-tooltip">Tanya Asisten PasarHub</span>
+        <span className="floating-wa-tooltip">Tanya Asisten Marketplace</span>
       </button>
     </div>
   );

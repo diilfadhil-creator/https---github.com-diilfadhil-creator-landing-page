@@ -2,13 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { 
   Search, Filter, SlidersHorizontal, Tag, 
   MapPin, User, Star, ShoppingBag, Eye, 
-  Plus, Sparkles, Trash2, ArrowUpDown, RefreshCw, MessageCircle
+  Plus, Sparkles, Trash2, ArrowUpDown, RefreshCw, MessageCircle,
+  Cloud, CloudCheck, Loader2
 } from 'lucide-react';
 import { CATEGORIES } from '../config/marketplaceData';
 import { getProductWhatsAppUrl } from '../config/whatsapp';
 
 export default function ProductCatalog({ 
   products, 
+  isLoading = false,
+  isCloudConnected = false,
+  onRefresh,
   onSelectProduct, 
   onOpenUpload, 
   onAddToCart,
@@ -50,17 +54,15 @@ export default function ProductCatalog({
           return false;
         }
 
-        // Filter Pencarian Keyword
+        // Filter Pencarian
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
           const matchName = p.name?.toLowerCase().includes(q);
           const matchDesc = p.description?.toLowerCase().includes(q);
-          const matchLoc = p.location?.toLowerCase().includes(q);
           const matchSeller = p.sellerName?.toLowerCase().includes(q);
-          const matchCat = p.category?.toLowerCase().includes(q);
-          if (!matchName && !matchDesc && !matchLoc && !matchSeller && !matchCat) {
-            return false;
-          }
+          const matchLoc = p.location?.toLowerCase().includes(q);
+          const matchTags = p.tags?.some((t) => t.toLowerCase().includes(q));
+          return matchName || matchDesc || matchSeller || matchLoc || matchTags;
         }
 
         return true;
@@ -91,11 +93,22 @@ export default function ProductCatalog({
         
         {/* Section Header */}
         <div className="section-header">
-          <span className="tag tag-amber">
-            <Sparkles size={14} className="inline mr-1" /> Etalase Produk Serba Ada
-          </span>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="tag tag-amber">
+              <Sparkles size={14} className="inline mr-1" /> Etalase Produk Serba Ada
+            </span>
+            {isCloudConnected ? (
+              <span className="tag tag-green text-xs" style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
+                🟢 Cloud Sync Realtime
+              </span>
+            ) : (
+              <span className="tag tag-blue text-xs" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+                🟡 Mode Cache Lokal
+              </span>
+            )}
+          </div>
           <h2>Jelajahi & Beli <span className="gradient-text-food">Produk Pilihan</span></h2>
-          <p>Temukan ribuan barang berkualitas dari berbagai kategori atau unggah produk Anda sendiri untuk langsung dipasarkan.</p>
+          <p>Temukan ribuan barang berkualitas dari berbagai kategori atau unggah produk Anda sendiri untuk langsung dipasarkan ke seluruh pembeli.</p>
 
           {/* Action Top Banner */}
           <div className="catalog-cta-strip glass-panel mt-6 gradient-border-food">
@@ -105,7 +118,7 @@ export default function ProductCatalog({
               </div>
               <div className="strip-text">
                 <h4>Punya Barang yang Ingin Dijual Hari Ini?</h4>
-                <p>Pasang iklan produk Anda gratis tanpa biaya admin. Langsung terhubung dengan pembeli via WhatsApp!</p>
+                <p>Pasang iklan produk Anda gratis tanpa biaya admin. Terhubung langsung dengan jutaan calon pembeli via WhatsApp!</p>
               </div>
             </div>
             <button 
@@ -133,15 +146,15 @@ export default function ProductCatalog({
 
             {categoryCounts['my-products'] > 0 && (
               <button
-                className={`cat-tab-pill cat-user-pill ${selectedCat === 'my-products' ? 'active' : ''}`}
+                className={`cat-tab-pill tab-my-prod ${selectedCat === 'my-products' ? 'active' : ''}`}
                 onClick={() => setSelectedCat('my-products')}
               >
-                <span>✨ Produk Anda</span>
-                <span className="cat-counter counter-user">{categoryCounts['my-products']}</span>
+                <span>✨ Unggahan Anda</span>
+                <span className="cat-counter">{categoryCounts['my-products']}</span>
               </button>
             )}
 
-            {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+            {CATEGORIES.filter(c => c.id !== 'all').map((cat) => (
               <button
                 key={cat.id}
                 className={`cat-tab-pill ${selectedCat === cat.id ? 'active' : ''}`}
@@ -153,21 +166,27 @@ export default function ProductCatalog({
             ))}
           </div>
 
-          {/* Search, Condition & Sort Controls */}
-          <div className="catalog-controls-row mt-4">
+          {/* Search & Sort Bar */}
+          <div className="catalog-search-sort-bar">
             
             {/* Search Input */}
-            <div className="catalog-search-wrap">
+            <div className="search-input-wrap">
               <Search size={18} className="search-icon text-muted" />
-              <input 
+              <input
                 type="text"
-                placeholder="Cari produk, merk, lokasi, atau penjual..."
+                placeholder="Cari nama barang, kategori, lokasi, atau nama penjual..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="catalog-search-input"
+                className="search-input"
               />
               {searchQuery && (
-                <button className="clear-search-btn" onClick={() => setSearchQuery('')}>✕</button>
+                <button 
+                  className="search-clear-btn" 
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Hapus pencarian"
+                >
+                  ✕
+                </button>
               )}
             </div>
 
@@ -212,22 +231,38 @@ export default function ProductCatalog({
 
         </div>
 
-        {/* Results Counter & Reset Action */}
+        {/* Results Counter & Actions */}
         <div className="results-status-bar">
           <span className="text-muted text-sm">
             Menampilkan <strong>{filteredProducts.length}</strong> produk {searchQuery && `untuk pencarian "${searchQuery}"`}
           </span>
-          <button 
-            className="btn-text-reset text-xs text-muted"
-            onClick={onResetProducts}
-            title="Kembalikan produk ke bawaan sistem"
-          >
-            <RefreshCw size={12} className="inline mr-1" /> Reset Data Bawaan
-          </button>
+          <div className="flex items-center gap-3">
+            {onRefresh && (
+              <button 
+                className="btn-text-reset text-xs text-muted"
+                onClick={onRefresh}
+                title="Segarkan data dari server"
+              >
+                <RefreshCw size={12} className={`inline mr-1 ${isLoading ? 'animate-spin' : ''}`} /> Refresh
+              </button>
+            )}
+            <button 
+              className="btn-text-reset text-xs text-muted"
+              onClick={onResetProducts}
+              title="Kembalikan produk ke bawaan sistem"
+            >
+              <RefreshCw size={12} className="inline mr-1" /> Reset Data
+            </button>
+          </div>
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length === 0 ? (
+        {isLoading ? (
+          <div className="loading-grid-state text-center py-12">
+            <Loader2 size={40} className="text-amber animate-spin inline mb-3" />
+            <p className="text-muted text-sm">Memuat etalase produk dari Cloud Database...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="no-products-box glass-panel text-center">
             <div className="no-products-icon">
               <Search size={48} className="text-muted" />
@@ -260,13 +295,19 @@ export default function ProductCatalog({
 
               return (
                 <div 
-                  key={product.id} 
-                  className={`product-card glass-panel gradient-border-food ${product.isFeatured ? 'product-card-featured' : ''}`}
+                  key={product.id}
+                  className="product-card glass-panel gradient-border-food animated-fade-in"
                   onClick={() => onSelectProduct(product)}
                 >
-                  {/* Card Image */}
-                  <div className="product-image-wrap">
-                    <img src={product.image} alt={product.name} className="product-img" loading="lazy" />
+                  
+                  {/* Media Thumbnail */}
+                  <div className="product-card-media">
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      loading="lazy"
+                      className="product-thumb-img"
+                    />
                     
                     {discountPercent && (
                       <div className="badge-discount-top">Diskon {discountPercent}%</div>
@@ -338,7 +379,7 @@ export default function ProductCatalog({
                     {/* Tags */}
                     {product.tags && product.tags.length > 0 && (
                       <div className="tags-row-mini">
-                        {product.tags.slice(0, 2).map((t, idx) => (
+                        {(Array.isArray(product.tags) ? product.tags : []).slice(0, 2).map((t, idx) => (
                           <span key={idx} className="tag-mini">{t}</span>
                         ))}
                       </div>

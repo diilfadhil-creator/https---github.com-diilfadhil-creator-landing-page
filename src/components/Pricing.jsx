@@ -73,7 +73,7 @@ export default function Pricing({ onOpenUpload }) {
 
   const handleSendBoosterWA = (e) => {
     e.preventDefault();
-    const msg = `Halo Admin PasarHub! Saya ingin mengaktifkan layanan *${selectedPlan.name}* (Rp ${selectedPlan.price}/${selectedPlan.period}).\n\n` +
+    const msg = `Halo Admin Marketplace! Saya ingin mengaktifkan layanan *${selectedPlan.name}* (Rp ${selectedPlan.price}/${selectedPlan.period}).\n\n` +
       `🏪 *Nama Toko/Penjual*: ${planForm.storeName}\n` +
       `📱 *No. WhatsApp*: ${planForm.phone}\n` +
       `🛍️ *Nama Produk*: ${planForm.productName || '-'}\n\n` +

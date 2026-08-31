@@ -12,7 +12,7 @@ export default function Testimonials() {
       rating: 5,
       avatarBg: 'bg-gradient-amber',
       initials: 'DP',
-      quote: 'Enak banget jualan di PasarHub! Upload produknya nggak sampai 1 menit, dan yang paling mantap 0% potongan admin. Pas ada buyer cocok langsung transaksi via WA.'
+      quote: 'Enak banget jualan di Marketplace! Upload produknya nggak sampai 1 menit, dan yang paling mantap 0% potongan admin. Pas ada buyer cocok langsung transaksi via WA.'
     },
     {
       name: 'Amanda Stephanie',

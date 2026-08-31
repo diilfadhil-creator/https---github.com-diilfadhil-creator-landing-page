@@ -1,8 +1,8 @@
 import React from 'react';
-import { Store, Globe, Share2, MessageCircle, ShieldCheck, Heart, MapPin } from 'lucide-react';
+import { Store, Globe, Share2, MessageCircle, ShieldCheck, Heart, MapPin, Cloud, Database } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
-export default function Footer({ onOpenUpload }) {
+export default function Footer({ onOpenUpload, isCloudConnected = false }) {
   return (
     <footer className="footer-section">
       <div className="container">
@@ -16,7 +16,7 @@ export default function Footer({ onOpenUpload }) {
                 <Store className="logo-icon text-white" size={22} />
               </div>
               <span className="logo-text">
-                Pasar<span className="gradient-text-food">Hub</span> 
+                Market<span className="gradient-text-food">place</span> 
                 <span className="logo-badge badge-halal">0% ADMIN FEE</span>
               </span>
             </a>
@@ -25,7 +25,11 @@ export default function Footer({ onOpenUpload }) {
             </p>
             <div className="system-status-pill border-amber">
               <span className="status-dot-green"></span>
-              <span>Layanan Upload & Transaksi: AKTIF 24 JAM</span>
+              <span>
+                {isCloudConnected 
+                  ? '☁️ Cloud Database: TERKONEKSI (Multi-Seller Live)' 
+                  : '🟢 Layanan Upload & Transaksi: AKTIF 24 JAM'}
+              </span>
             </div>
           </div>
 
@@ -65,7 +69,7 @@ export default function Footer({ onOpenUpload }) {
             <ul>
               <li>
                 <a 
-                  href={getWhatsAppUrl('Halo Admin PasarHub! Saya butuh bantuan seputar marketplace.')}
+                  href={getWhatsAppUrl('Halo Admin Marketplace! Saya butuh bantuan seputar marketplace.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-green font-semibold"
@@ -83,13 +87,13 @@ export default function Footer({ onOpenUpload }) {
 
         {/* Footer Bottom */}
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} PasarHub Nusantara Marketplace. Platform Jual Beli Serba Ada.</p>
+          <p>© {new Date().getFullYear()} Marketplace Nusantara. Platform Jual Beli Serba Ada.</p>
           
           <div className="social-links">
             <a href="#" aria-label="Website"><Globe size={18} /></a>
             <a href="#" aria-label="Bagikan"><Share2 size={18} /></a>
             <a 
-              href={getWhatsAppUrl('Halo Admin PasarHub!')} 
+              href={getWhatsAppUrl('Halo Admin Marketplace!')} 
               target="_blank" 
               rel="noopener noreferrer" 
               aria-label="WhatsApp"

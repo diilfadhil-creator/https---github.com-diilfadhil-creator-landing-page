@@ -11,7 +11,7 @@ export default function FeaturesBento() {
         
         <div className="section-header">
           <span className="tag tag-amber">Keunggulan & Manfaat</span>
-          <h2>Kenapa Harus Berjualan di <span className="gradient-text-food">PasarHub Nusantara?</span></h2>
+          <h2>Kenapa Harus Berjualan di <span className="gradient-text-food">Marketplace Nusantara?</span></h2>
           <p>Solusi jual beli modern paling fleksibel untuk UMKM, penjual pribadi, dan pencari barang berkualitas.</p>
         </div>
 
@@ -32,7 +32,7 @@ export default function FeaturesBento() {
             <div className="bento-graphic-agents">
               <div className="agent-pill agent-master border-amber">
                 <Sparkles size={16} className="text-amber" />
-                <span>Skema Transaksi Langsung PasarHub</span>
+                <span>Skema Transaksi Langsung Marketplace</span>
               </div>
               <div className="agent-tree-connector"></div>
               <div className="agent-sub-group">

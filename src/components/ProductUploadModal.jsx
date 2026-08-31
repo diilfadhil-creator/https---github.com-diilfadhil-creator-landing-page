@@ -2,11 +2,12 @@ import React, { useState, useRef } from 'react';
 import { 
   Upload, Image, Plus, Check, X, Sparkles, Tag, 
   MapPin, Phone, User, Layers, AlertCircle, 
-  CheckCircle2, ArrowRight, Eye, Camera, Package, ShieldCheck
+  CheckCircle2, ArrowRight, Eye, Camera, Package, ShieldCheck,
+  Cloud, CloudCheck, Loader2
 } from 'lucide-react';
 import { CATEGORIES, PRESET_IMAGES } from '../config/marketplaceData';
 
-export default function ProductUploadModal({ isOpen, onClose, onProductUploaded }) {
+export default function ProductUploadModal({ isOpen, onClose, onProductUploaded, isCloudConnected }) {
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -29,6 +30,7 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [createdProduct, setCreatedProduct] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
@@ -78,7 +80,7 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
   };
 
   // Submit Handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -95,33 +97,44 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
       return;
     }
 
-    // Default image if empty
-    const finalImage = formData.image || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80';
+    setIsSubmitting(true);
 
-    const newProduct = {
-      id: 'user-prod-' + Date.now(),
-      name: formData.name.trim(),
-      category: formData.category,
-      price: Number(formData.price),
-      originalPrice: formData.originalPrice ? Number(formData.originalPrice) : null,
-      condition: formData.condition,
-      stock: Number(formData.stock) || 1,
-      location: formData.location || 'Indonesia',
-      sellerName: formData.sellerName.trim(),
-      sellerPhone: formData.sellerPhone.trim() || '085150962928',
-      image: finalImage,
-      description: formData.description.trim() || 'Produk berkualitas tinggi siap dikirim ke alamat Anda.',
-      tags: formData.tags.length > 0 ? formData.tags : ['Produk Baru'],
-      rating: 5.0,
-      soldCount: 0,
-      isFeatured: false,
-      isUserUploaded: true,
-      createdAt: new Date().toISOString()
-    };
+    try {
+      // Default image if empty
+      const finalImage = formData.image || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80';
 
-    setCreatedProduct(newProduct);
-    onProductUploaded(newProduct);
-    setUploadSuccess(true);
+      const newProduct = {
+        id: 'user-prod-' + Date.now(),
+        name: formData.name.trim(),
+        category: formData.category,
+        price: Number(formData.price),
+        originalPrice: formData.originalPrice ? Number(formData.originalPrice) : null,
+        condition: formData.condition,
+        stock: Number(formData.stock) || 1,
+        location: formData.location || 'Indonesia',
+        sellerName: formData.sellerName.trim(),
+        sellerPhone: formData.sellerPhone.trim() || '085150962928',
+        image: finalImage,
+        description: formData.description.trim() || 'Produk berkualitas tinggi siap dikirim ke alamat Anda.',
+        tags: formData.tags.length > 0 ? formData.tags : ['Produk Baru'],
+        rating: 5.0,
+        soldCount: 0,
+        isFeatured: false,
+        isUserUploaded: true,
+        createdAt: new Date().toISOString()
+      };
+
+      setCreatedProduct(newProduct);
+      if (onProductUploaded) {
+        await onProductUploaded(newProduct);
+      }
+      setUploadSuccess(true);
+    } catch (err) {
+      console.error('Gagal submit produk:', err);
+      setErrorMsg(err.message || 'Gagal memproses upload produk. Silakan coba kembali.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleResetAndClose = () => {
@@ -137,9 +150,20 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
         {/* Header Modal */}
         <div className="upload-modal-header">
           <div className="header-badge-title">
-            <span className="tag tag-amber">
-              <Sparkles size={14} className="inline mr-1" /> PasarHub Studio Jual
-            </span>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="tag tag-amber">
+                <Sparkles size={14} className="inline mr-1" /> Marketplace Studio Jual
+              </span>
+              {isCloudConnected ? (
+                <span className="tag tag-green text-xs" style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
+                  ☁️ Cloud Database Publik
+                </span>
+              ) : (
+                <span className="tag tag-blue text-xs" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+                  📦 Mode Penyimpanan Lokal
+                </span>
+              )}
+            </div>
             <h2>Unggah & Jual Produk Anda</h2>
             <p className="text-muted text-sm">
               Isi formulir di bawah ini untuk memasang produk Anda di etalase marketplace secara instan tanpa biaya admin (100% Gratis).
@@ -176,34 +200,207 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
 
             <div className="success-actions mt-6">
               <button 
-                className="btn btn-primary btn-food-orange btn-lg"
+                className="btn btn-primary btn-food-orange btn-lg" 
                 onClick={handleResetAndClose}
               >
                 <span>Lihat di Etalase Sekarang</span>
                 <ArrowRight size={18} />
+              </button>
+              <button 
+                className="btn btn-secondary btn-lg ml-3"
+                onClick={() => {
+                  setUploadSuccess(false);
+                  setCreatedProduct(null);
+                  setFormData({
+                    name: '',
+                    category: 'gadget',
+                    price: '',
+                    originalPrice: '',
+                    condition: 'Baru (BNIB)',
+                    stock: 1,
+                    location: 'Jakarta Selatan',
+                    sellerName: '',
+                    sellerPhone: '',
+                    description: '',
+                    image: '',
+                    tags: ['Gratis Ongkir']
+                  });
+                }}
+              >
+                <Plus size={16} />
+                <span>Unggah Produk Lain</span>
               </button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="upload-form-grid">
             
-            {/* Left Column: Form Details */}
-            <div className="upload-form-fields">
+            {/* Left Column: Image & Media Upload */}
+            <div className="upload-col-media">
+              <label className="form-label-section">
+                <Camera size={16} className="text-amber inline mr-1" />
+                <span>Foto Produk / Cover Etalase *</span>
+              </label>
+
+              {/* Image Source Tabs */}
+              <div className="image-tabs-picker">
+                <button
+                  type="button"
+                  className={`img-tab-btn ${imageTab === 'upload' ? 'active' : ''}`}
+                  onClick={() => setImageTab('upload')}
+                >
+                  <Upload size={14} />
+                  <span>Upload Foto</span>
+                </button>
+                <button
+                  type="button"
+                  className={`img-tab-btn ${imageTab === 'preset' ? 'active' : ''}`}
+                  onClick={() => setImageTab('preset')}
+                >
+                  <Sparkles size={14} />
+                  <span>Pilihan Siap Pakai</span>
+                </button>
+                <button
+                  type="button"
+                  className={`img-tab-btn ${imageTab === 'url' ? 'active' : ''}`}
+                  onClick={() => setImageTab('url')}
+                >
+                  <Image size={14} />
+                  <span>Link URL</span>
+                </button>
+              </div>
+
+              {/* Tab 1: Direct File Upload */}
+              {imageTab === 'upload' && (
+                <div 
+                  className="upload-dropzone glass-panel"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileChange} 
+                    accept="image/*" 
+                    className="hidden" 
+                    style={{ display: 'none' }}
+                  />
+                  {formData.image ? (
+                    <div className="dropzone-preview">
+                      <img src={formData.image} alt="Preview" className="preview-img-full" />
+                      <div className="preview-overlay">
+                        <span>Ganti Foto</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="dropzone-empty">
+                      <div className="dropzone-icon bg-amber-soft">
+                        <Upload size={28} className="text-amber" />
+                      </div>
+                      <p className="font-semibold text-sm">Klik untuk pilih gambar dari galeri HP / Laptop</p>
+                      <span className="text-xs text-muted">Format JPG, PNG, WEBP (Maks 5MB)</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tab 2: Presets by category */}
+              {imageTab === 'preset' && (
+                <div className="presets-gallery-grid custom-scroll">
+                  {PRESET_IMAGES.map((preset, index) => (
+                    <div 
+                      key={index} 
+                      className={`preset-thumb-card ${formData.image === preset.url ? 'selected' : ''}`}
+                      onClick={() => handleSelectPreset(preset.url)}
+                    >
+                      <img src={preset.url} alt={preset.title} />
+                      <span className="preset-caption">{preset.title}</span>
+                      {formData.image === preset.url && (
+                        <div className="preset-check-badge">
+                          <Check size={12} />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Tab 3: URL */}
+              {imageTab === 'url' && (
+                <div className="url-input-box">
+                  <input 
+                    type="url" 
+                    placeholder="https://images.unsplash.com/photo-xxx..."
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    className="form-input text-sm"
+                  />
+                  {formData.image && (
+                    <div className="url-preview-thumb mt-2">
+                      <img src={formData.image} alt="Preview URL" />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tags Selector */}
+              <div className="tags-manager-section mt-4">
+                <label className="form-label-section">
+                  <Tag size={16} className="text-amber inline mr-1" />
+                  <span>Label & Promo Produk:</span>
+                </label>
+                <div className="tags-quick-picker">
+                  {['Gratis Ongkir', 'Bisa Nego WA', 'Baru (BNIB)', 'Garansi Resmi', 'Bisa COD', 'Diskon 10%', 'Original 100%'].map((t) => (
+                    <button
+                      type="button"
+                      key={t}
+                      className={`tag-toggle-chip ${formData.tags.includes(t) ? 'active' : ''}`}
+                      onClick={() => toggleTag(t)}
+                    >
+                      {formData.tags.includes(t) && <Check size={12} className="inline mr-1" />}
+                      {t}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="custom-tag-row mt-2">
+                  <input 
+                    type="text" 
+                    placeholder="+ Tambah label custom..."
+                    value={customTagInput}
+                    onChange={(e) => setCustomTagInput(e.target.value)}
+                    className="form-input text-xs"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={handleAddCustomTag}
+                    className="btn btn-secondary btn-xs"
+                  >
+                    Tambah
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Column: Details & Seller Information */}
+            <div className="upload-col-info">
               
               {errorMsg && (
-                <div className="alert-error-box animated-fade-in">
+                <div className="upload-error-banner animated-shake">
                   <AlertCircle size={18} />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {/* 1. Nama Produk */}
-              <div className="form-group">
-                <label>Nama Produk <span className="text-red">*</span></label>
+              <div className="form-group mb-3">
+                <label className="form-label">
+                  Nama Barang / Judul Produk <span className="text-amber">*</span>
+                </label>
                 <input 
                   type="text"
-                  placeholder="Contoh: Kamera Sony A7 III / Jaket Kulit Vintage / Kopi Arabika"
                   required
+                  placeholder="Contoh: iPhone 14 Pro Max 128GB Deep Purple Fullset"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="form-input"
@@ -211,15 +408,15 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
               </div>
 
               {/* 2. Kategori & Kondisi */}
-              <div className="form-row-2">
+              <div className="form-grid-2 mb-3">
                 <div className="form-group">
-                  <label>Kategori Produk</label>
+                  <label className="form-label">Kategori</label>
                   <select 
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="form-select"
                   >
-                    {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+                    {CATEGORIES.filter(c => c.id !== 'all').map((cat) => (
                       <option key={cat.id} value={cat.id}>
                         {cat.icon} {cat.name}
                       </option>
@@ -228,244 +425,143 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
                 </div>
 
                 <div className="form-group">
-                  <label>Kondisi Barang</label>
+                  <label className="form-label">Kondisi Barang</label>
                   <select 
                     value={formData.condition}
                     onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                     className="form-select"
                   >
-                    <option value="Baru (BNIB)">Baru (BNIB)</option>
-                    <option value="Baru (Produksi Sendiri)">Baru (Produksi Sendiri / Home-made)</option>
-                    <option value="Bekas Like New (99%)">Bekas Like New (99%)</option>
-                    <option value="Bekas Sangat Baik">Bekas Sangat Baik (Normal)</option>
-                    <option value="Bekas Layak Pakai">Bekas Layak Pakai</option>
+                    <option value="Baru (BNIB)">Baru (Segel / BNIB)</option>
+                    <option value="Bekas Like New (99%)">Bekas Mulus Like New (99%)</option>
+                    <option value="Bekas Normal (90%)">Bekas Normal (90%)</option>
+                    <option value="Refurbished / Servis">Refurbished / Rekondisi</option>
                   </select>
                 </div>
               </div>
 
-              {/* 3. Harga & Harga Coret Promo */}
-              <div className="form-row-2">
+              {/* 3. Harga & Diskon */}
+              <div className="form-grid-2 mb-3">
                 <div className="form-group">
-                  <label>Harga Jual (Rp) <span className="text-red">*</span></label>
+                  <label className="form-label">
+                    Harga Jual (Rp) <span className="text-amber">*</span>
+                  </label>
                   <input 
                     type="number"
-                    placeholder="Contoh: 150000"
                     required
                     min="1000"
+                    placeholder="Contoh: 1500000"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="form-input"
+                    className="form-input font-mono"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Harga Asli / Coret (Opsional)</label>
+                  <label className="form-label">Harga Coret / Asli (Opsional)</label>
                   <input 
                     type="number"
-                    placeholder="Contoh: 200000"
-                    min="1000"
+                    min="0"
+                    placeholder="Contoh: 1800000"
                     value={formData.originalPrice}
                     onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    className="form-input"
+                    className="form-input font-mono"
                   />
                 </div>
               </div>
 
-              {/* 4. Stok & Lokasi */}
-              <div className="form-row-2">
+              {/* 4. Lokasi & Stok */}
+              <div className="form-grid-2 mb-3">
                 <div className="form-group">
-                  <label>Jumlah Stok</label>
-                  <input 
-                    type="number"
-                    min="1"
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="form-input"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Lokasi Penjual (Kota/Kabupaten)</label>
+                  <label className="form-label">Kota / Lokasi Pengiriman</label>
                   <input 
                     type="text"
-                    placeholder="Contoh: Jakarta Selatan / Bandung / Surabaya"
+                    placeholder="Contoh: Jakarta Selatan, Surabaya, dll"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     className="form-input"
                   />
                 </div>
+
+                <div className="form-group">
+                  <label className="form-label">Jumlah Stok Siap Kirim</label>
+                  <input 
+                    type="number"
+                    min="1"
+                    placeholder="1"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    className="form-input font-mono"
+                  />
+                </div>
               </div>
 
               {/* 5. Info Penjual & WhatsApp */}
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>Nama Toko / Penjual <span className="text-red">*</span></label>
-                  <input 
-                    type="text"
-                    placeholder="Nama Anda atau Nama Toko Anda"
-                    required
-                    value={formData.sellerName}
-                    onChange={(e) => setFormData({ ...formData, sellerName: e.target.value })}
-                    className="form-input"
-                  />
+              <div className="form-section-card glass-panel mb-3">
+                <div className="card-section-head">
+                  <Phone size={15} className="text-amber inline mr-1" />
+                  <span className="font-semibold text-sm">Kontak Penjual (Tujuan Order WhatsApp):</span>
                 </div>
+                
+                <div className="form-grid-2 mt-2">
+                  <div className="form-group">
+                    <label className="form-label text-xs">Nama Anda / Nama Toko *</label>
+                    <input 
+                      type="text"
+                      required
+                      placeholder="Contoh: Toko Berkah Jaya"
+                      value={formData.sellerName}
+                      onChange={(e) => setFormData({ ...formData, sellerName: e.target.value })}
+                      className="form-input text-sm"
+                    />
+                  </div>
 
-                <div className="form-group">
-                  <label>Nomor WhatsApp Pembeli Menghubungi</label>
-                  <input 
-                    type="tel"
-                    placeholder="081234567890"
-                    value={formData.sellerPhone}
-                    onChange={(e) => setFormData({ ...formData, sellerPhone: e.target.value })}
-                    className="form-input"
-                  />
+                  <div className="form-group">
+                    <label className="form-label text-xs">Nomor WhatsApp Pembeli Menghubungi</label>
+                    <input 
+                      type="tel"
+                      placeholder="Contoh: 081234567890"
+                      value={formData.sellerPhone}
+                      onChange={(e) => setFormData({ ...formData, sellerPhone: e.target.value })}
+                      className="form-input text-sm font-mono"
+                    />
+                  </div>
                 </div>
+                <span className="text-xs text-muted block mt-1">
+                  *Nomor ini akan langsung menerima pesan chat saat pembeli menekan tombol beli di etalase.
+                </span>
               </div>
 
-              {/* 6. Deskripsi Produk */}
-              <div className="form-group">
-                <label>Deskripsi & Spesifikasi Produk Lengkap</label>
+              {/* 6. Deskripsi Barang */}
+              <div className="form-group mb-3">
+                <label className="form-label">Deskripsi Lengkap & Spesifikasi Produk</label>
                 <textarea 
                   rows={3}
-                  placeholder="Jelaskan spesifikasi produk, keunggulan, kelengkapan aksesoris, garansi, atau cara penggunaan..."
+                  placeholder="Jelaskan kondisi detail barang, kelengkapan aksesoris, spesifikasi, dan keunggulan produk Anda..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="form-input"
+                  className="form-input text-sm"
                 />
               </div>
 
-              {/* 7. Label / Tags Promosi */}
-              <div className="form-group">
-                <label>Label & Keunggulan Produk</label>
-                <div className="tag-chips-wrapper">
-                  {['Gratis Ongkir', 'Bisa COD', 'Garansi Resmi', '100% Original', 'Diskon Spesial', 'Kualitas Premium'].map((t) => (
-                    <button
-                      type="button"
-                      key={t}
-                      className={`tag-chip ${formData.tags.includes(t) ? 'active' : ''}`}
-                      onClick={() => toggleTag(t)}
-                    >
-                      {formData.tags.includes(t) && <Check size={12} className="inline mr-1" />}
-                      {t}
-                    </button>
-                  ))}
+              {/* Live Card Mini Preview */}
+              <div className="live-preview-box glass-panel">
+                <div className="preview-badge-mini">
+                  <Eye size={12} className="inline mr-1" /> Tampilan Kartu di Etalase:
                 </div>
-              </div>
-
-            </div>
-
-            {/* Right Column: Media Upload & Live Card Preview */}
-            <div className="upload-media-preview-pane">
-              
-              <div className="media-selector-box glass-panel">
-                <label className="section-mini-label">Foto Produk <span className="text-red">*</span></label>
-                
-                {/* Tabs Image Source */}
-                <div className="media-tabs">
-                  <button 
-                    type="button" 
-                    className={`tab-btn ${imageTab === 'upload' ? 'active' : ''}`}
-                    onClick={() => setImageTab('upload')}
-                  >
-                    <Upload size={14} /> Upload File
-                  </button>
-                  <button 
-                    type="button" 
-                    className={`tab-btn ${imageTab === 'preset' ? 'active' : ''}`}
-                    onClick={() => setImageTab('preset')}
-                  >
-                    <Sparkles size={14} /> Pilih Contoh
-                  </button>
-                  <button 
-                    type="button" 
-                    className={`tab-btn ${imageTab === 'url' ? 'active' : ''}`}
-                    onClick={() => setImageTab('url')}
-                  >
-                    <Image size={14} /> URL Link
-                  </button>
-                </div>
-
-                {/* Tab 1: File Upload */}
-                {imageTab === 'upload' && (
-                  <div 
-                    className="dropzone-box" 
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      onChange={handleFileChange} 
-                      accept="image/*" 
-                      style={{ display: 'none' }} 
-                    />
-                    <div className="dropzone-inner">
-                      <Camera size={32} className="text-amber mb-2" />
-                      <p className="text-sm font-semibold">Klik untuk Pilih Foto dari Perangkat</p>
-                      <span className="text-xs text-muted">Format JPG, PNG, WEBP (Maks 5 MB)</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Tab 2: Preset Photos */}
-                {imageTab === 'preset' && (
-                  <div className="preset-grid custom-scroll">
-                    {PRESET_IMAGES.map((preset, idx) => (
-                      <div 
-                        key={idx}
-                        className={`preset-item ${formData.image === preset.url ? 'selected' : ''}`}
-                        onClick={() => handleSelectPreset(preset.url)}
-                      >
-                        <img src={preset.url} alt={preset.title} />
-                        <span className="preset-title">{preset.title}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Tab 3: URL Link */}
-                {imageTab === 'url' && (
-                  <div className="url-input-box">
-                    <input 
-                      type="url"
-                      placeholder="Tempel tautan gambar https://..."
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="form-input"
-                    />
-                  </div>
-                )}
-
-              </div>
-
-              {/* Live Preview Card */}
-              <div className="live-preview-box">
-                <div className="preview-label">
-                  <Eye size={14} className="inline mr-1 text-amber" /> Pratinjau Tampilan Produk di Katalog:
-                </div>
-
-                <div className="product-card glass-panel preview-mode gradient-border-food">
-                  <div className="product-image-wrap">
-                    <img 
-                      src={formData.image || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80'} 
-                      alt="Preview" 
-                      className="product-img"
-                    />
-                    <div className="badge-condition-pill">{formData.condition}</div>
-                    <div className="badge-user-upload">Produk Anda</div>
-                  </div>
-
-                  <div className="product-card-info">
-                    <div className="card-top-meta">
-                      <span className="cat-pill">{formData.category?.toUpperCase()}</span>
-                      <span className="loc-pill"><MapPin size={11} /> {formData.location || 'Indonesia'}</span>
-                    </div>
-
-                    <h4 className="prod-title">{formData.name || 'Nama Produk Anda Akan Muncul di Sini'}</h4>
-
-                    <div className="price-row">
-                      <span className="price-val text-amber">
+                <div className="mini-mock-card">
+                  <img 
+                    src={formData.image || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80'} 
+                    alt="Preview" 
+                    className="mock-img"
+                  />
+                  <div className="mock-details">
+                    <span className="mock-cat">{formData.category.toUpperCase()} • {formData.location || 'Indonesia'}</span>
+                    <h5 className="mock-title">{formData.name || 'Judul Nama Produk Anda'}</h5>
+                    
+                    <div className="mock-price-row">
+                      <strong className="text-amber">
                         Rp {formData.price ? Number(formData.price).toLocaleString('id-ID') : '0'}
-                      </span>
+                      </strong>
                       {formData.originalPrice && Number(formData.originalPrice) > Number(formData.price) && (
                         <span className="price-original">
                           Rp {Number(formData.originalPrice).toLocaleString('id-ID')}
@@ -490,10 +586,20 @@ export default function ProductUploadModal({ isOpen, onClose, onProductUploaded 
               {/* Submit Button */}
               <button 
                 type="submit" 
+                disabled={isSubmitting}
                 className="btn btn-primary btn-food-orange btn-full btn-lg mt-4"
               >
-                <Plus size={20} />
-                <span>Publikasikan & Jual Produk Sekarang</span>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    <span>Memproses & Menyimpan Produk...</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus size={20} />
+                    <span>Publikasikan & Jual Produk Sekarang</span>
+                  </>
+                )}
               </button>
 
             </div>

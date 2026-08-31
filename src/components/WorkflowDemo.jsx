@@ -54,7 +54,7 @@ export default function WorkflowDemo({ onOpenUpload }) {
               <CheckCircle2 size={26} className="text-white" />
             </div>
             <h3>Tayang Seketika</h3>
-            <p>Produk langsung terbit di katalog etalase PasarHub dan dapat ditemukan oleh calon pembeli.</p>
+            <p>Produk langsung terbit di katalog etalase Marketplace dan dapat ditemukan oleh calon pembeli.</p>
           </div>
 
           <div className="step-card glass-panel gradient-border-food">
@@ -123,7 +123,7 @@ export default function WorkflowDemo({ onOpenUpload }) {
               </div>
 
               <div className="result-metric-row">
-                <span className="metric-label">Potongan Biaya Admin PasarHub:</span>
+                <span className="metric-label">Potongan Biaya Admin Marketplace:</span>
                 <strong className="metric-val text-green">Rp 0 (GRATIS 0%)</strong>
               </div>
 
