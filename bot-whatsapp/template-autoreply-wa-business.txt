@@ -1,0 +1,81 @@
+===================================================================
+TEMPLAT BALAS OTOMATIS (AUTO-REPLY) WHATSAPP BUSINESS DAPUR DELICIO
+Nomor: 085150962928
+===================================================================
+
+Gunakan template di bawah ini untuk disalin (copy-paste) ke fitur Balas Otomatis 
+di aplikasi WhatsApp Business pada HP Anda (Gratis & Langsung Aktif):
+
+-------------------------------------------------------------------
+1. PESAN SALAM OTOMATIS (Greeting Message)
+(Kirim otomatis setiap kali ada pelanggan baru yang mengirim chat)
+-------------------------------------------------------------------
+Teks Pesan:
+Halo! 👋 Selamat datang di *Dapur Delicio* (Layanan Kuliner Premium).
+Saya adalah *Mesin Asisten Otomatis Dapur Delicio* 🤖
+
+Pesanan Anda sedang diproses oleh sistem dapur kami!
+
+📌 *PILIHAN KETIK CEPAT:*
+- Ketik *1* atau *MENU* : Daftar menu & harga spesial
+- Ketik *2* atau *PROMO*: Klaim voucher diskon Rp 10.000
+- Ketik *3* atau *STATUS*: Cek estimasi waktu kirim
+- Ketik *4* atau *BAYAR*: Info rekening transfer & QRIS
+- Ketik *ADMIN*: Bicara langsung dengan staf dapur
+
+Jika Anda telah mengirimkan rincian pesanan dari website, mohon tunggu 1 menit untuk verifikasi otomatis ya! 😋🍗
+
+-------------------------------------------------------------------
+2. PESAN BALAS CEPAT UNTUK FORMAT PESANAN WEBSITE (Quick Reply: /pesan)
+(Balasan otomatis saat pelanggan memesan menu / paket)
+-------------------------------------------------------------------
+Teks Pesan:
+Terima kasih atas pesanan Anda di *Dapur Delicio*! 🍗🎉
+
+✅ *Pesanan Anda telah dicatat oleh sistem:*
+- Status Dapur: *Sedang Disiapkan (Fresh-to-Order)*
+- Estimasi Masak: *12 - 15 Menit*
+- Estimasi Pengiriman: *15 - 20 Menit (Kurir Instan)*
+
+💳 *PILIHAN PEMBAYARAN:*
+1. *QRIS All Payment* (GoPay, OVO, ShopeePay, Dana, BCA)
+2. *Transfer Bank*:
+   - BCA: 123-456-7890 a/n Dapur Delicio
+   - Mandiri: 987-654-3210 a/n Dapur Delicio
+
+Silakan kirimkan bukti transfer ke chat ini, dapur akan segera meluncurkan kurir ke alamat Anda! 🛵💨
+
+-------------------------------------------------------------------
+3. PESAN DAFTAR MENU (Quick Reply: /menu)
+-------------------------------------------------------------------
+Teks Pesan:
+📋 *DAFTAR MENU FAVORIT DAPUR DELICIO:*
+
+🍗 *MAIN COURSE:*
+1. Nasi Rempah Ayam Bakar Madu - Rp 38.000
+2. Gourmet Double Smoked Cheeseburger - Rp 45.000
+3. Nasi Sambal Cumi Rempah Nusantara - Rp 35.000
+
+📦 *PAKET HEMAT PROMO:*
+- *Solo Feast (1 Porsi)*: Rp 35.000 (Hemat 20%)
+- *Couple Combo (2 Porsi)*: Rp 68.000 (Paling Laris 🔥)
+- *Family Feast (4-5 Porsi)*: Rp 125.000 (Free Ongkir)
+
+🍹 *MINUMAN SEGAR:*
+- Signature Red Velvet Cream Cheese - Rp 24.000
+- Es Teh Manis Rempah - Rp 8.000
+
+Ketik nama menu & jumlah porsi untuk memesan! 😋
+
+-------------------------------------------------------------------
+4. PESAN VOUCHER PROMO (Quick Reply: /voucher)
+-------------------------------------------------------------------
+Teks Pesan:
+🎁 *KLAIM VOUCHER DISKON Rp 10.000:*
+Gunakan kode voucher: *LAPAR10K*
+
+Syarat & Ketentuan:
+- Berlaku untuk pemesanan minimal Rp 40.000
+- Otomatis memotong total tagihan belanja Anda
+- Gratis ongkir pengiriman s/d 5 KM pertama!
+===================================================================
