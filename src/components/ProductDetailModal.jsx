@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
   X, MapPin, User, ShoppingBag, ShieldCheck, 
-  Truck, Star, Share2, Heart, CheckCircle2, 
-  MessageCircle, Sparkles, Tag, Check, ArrowRight
+  Truck, Star, Share2, CheckCircle2, 
+  MessageCircle, Sparkles, Tag
 } from 'lucide-react';
 import { getProductWhatsAppUrl } from '../config/whatsapp';
 

@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { 
   Upload, Image, Plus, Check, X, Sparkles, Tag, 
-  MapPin, Phone, User, Layers, AlertCircle, 
-  CheckCircle2, ArrowRight, Eye, Camera, Package, ShieldCheck,
-  Cloud, CloudCheck, Loader2
+  MapPin, Phone, User, AlertCircle, 
+  CheckCircle2, ArrowRight, Eye, Camera, Loader2
 } from 'lucide-react';
 import { CATEGORIES, PRESET_IMAGES } from '../config/marketplaceData';
 

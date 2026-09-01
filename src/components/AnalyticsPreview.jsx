@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  ShieldCheck, Truck, Sparkles, CheckCircle2, 
-  ArrowUpRight, Users, Store, DollarSign 
+  ShieldCheck, CheckCircle2, 
+  ArrowUpRight, Store, DollarSign 
 } from 'lucide-react';
 
 export default function AnalyticsPreview() {

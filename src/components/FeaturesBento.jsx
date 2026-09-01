@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
-  Award, ShieldCheck, Zap, Heart, Truck, 
-  Sparkles, Check, MessageCircle, DollarSign, Store, Tag 
+  Zap, Truck, 
+  Sparkles, Check, MessageCircle, DollarSign, Store 
 } from 'lucide-react';
 
 export default function FeaturesBento() {

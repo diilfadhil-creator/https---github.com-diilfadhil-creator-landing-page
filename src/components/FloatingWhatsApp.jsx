@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Bot, Sparkles, CheckCircle2, ShoppingBag, ExternalLink, Plus } from 'lucide-react';
+import { X, Send, Bot, ExternalLink } from 'lucide-react';
 import { DEFAULT_ADMIN_PHONE, getWhatsAppUrl } from '../config/whatsapp';
 
-export default function FloatingWhatsApp({ onOpenUpload }) {
+export default function FloatingWhatsApp() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMsg, setInputMsg] = useState('');
   const [messages, setMessages] = useState([
@@ -117,6 +117,15 @@ export default function FloatingWhatsApp({ onOpenUpload }) {
 
           {/* Quick Bot Chips */}
           <div className="bot-quick-chips">
+            {onOpenUpload && (
+              <button 
+                onClick={() => { setIsOpen(false); onOpenUpload(); }} 
+                className="bot-chip"
+                style={{ background: 'rgba(56, 189, 248, 0.2)', borderColor: 'rgba(56, 189, 248, 0.5)', color: '#7dd3fc', fontWeight: 'bold' }}
+              >
+                ✨ + Upload Produk
+              </button>
+            )}
             <button onClick={() => handleSendMessage('Bagaimana cara jual produk?')} className="bot-chip">
               📦 Cara Jual
             </button>

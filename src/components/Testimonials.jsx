@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Quote, Store, ShoppingBag } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 
 export default function Testimonials() {
   const [filterCategory, setFilterCategory] = useState('all');

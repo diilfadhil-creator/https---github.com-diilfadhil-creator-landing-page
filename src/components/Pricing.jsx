@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Check, Sparkles, Plus, ArrowRight, ShieldCheck, 
-  Truck, Package, X, CheckCircle2, MessageCircle, Star, Zap 
-} from 'lucide-react';
+import { Check, Plus, ShieldCheck, X, MessageCircle, Zap } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
 export default function Pricing({ onOpenUpload }) {

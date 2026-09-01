@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Plus, CheckCircle2, ArrowRight, Store, MessageCircle } from 'lucide-react';
+import { Sparkles, Plus, CheckCircle2, ArrowRight, MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
 export default function CTA({ onOpenUpload }) {

@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { 
   Camera, FileText, CheckCircle2, MessageCircle, 
-  DollarSign, Calculator, Sparkles, Plus, TrendingUp 
+  Calculator, Sparkles, Plus, TrendingUp
 } from 'lucide-react';
 
 export default function WorkflowDemo({ onOpenUpload }) {
   const [estimatedPrice, setEstimatedPrice] = useState(250000);
   const [estimatedQty, setEstimatedQty] = useState(10);
-  const [marketType, setMarketType] = useState('umum'); // 'umum', 'elektronik', 'fashion', 'kuliner'
 
   const platformFee = 0; // 0%
   const totalRevenue = estimatedPrice * estimatedQty;
   const netEarnings = totalRevenue - platformFee;
 
-  const comparisonFeeOtherPlatform = totalRevenue * 0.08; // 8% fee on other marketplace
+  const comparisonFeeOtherPlatform = Math.round(totalRevenue * 0.08); // 8% fee on other marketplace
+
+  const applyPreset = (price, qty) => {
+    setEstimatedPrice(price);
+    setEstimatedQty(qty);
+  };
 
   return (
     <section id="cara-jual" className="section workflow-section">
@@ -78,28 +82,63 @@ export default function WorkflowDemo({ onOpenUpload }) {
             <span className="badge-pill badge-food-pill">100% Keuntungan Milik Anda</span>
           </div>
 
+          {/* Quick Scenario Buttons */}
+          <div className="calc-preset-bar mt-4">
+            <span className="text-xs text-muted font-bold uppercase tracking-wider mr-2">Contoh Skenario:</span>
+            <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <button 
+                type="button" 
+                className="btn-mode text-xs" 
+                onClick={() => applyPreset(35000, 30)}
+              >
+                ☕ Kuliner/Kopi (Rp 35rb / 30 pcs)
+              </button>
+              <button 
+                type="button" 
+                className="btn-mode text-xs" 
+                onClick={() => applyPreset(150000, 15)}
+              >
+                👕 Fashion (Rp 150rb / 15 pcs)
+              </button>
+              <button 
+                type="button" 
+                className="btn-mode text-xs" 
+                onClick={() => applyPreset(1200000, 5)}
+              >
+                📱 Gadget/Elektronik (Rp 1.2jt / 5 unit)
+              </button>
+            </div>
+          </div>
+
           <div className="calc-body-grid mt-4">
             
             {/* Input Controls */}
             <div className="calc-inputs-col">
-              <div className="form-group mb-3">
-                <label>Estimasi Harga Jual per Produk (Rp):</label>
+              <div className="form-group mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-sm font-semibold">Estimasi Harga Jual per Produk:</label>
+                  <span className="slider-value-tag text-amber font-mono font-bold">
+                    Rp {estimatedPrice.toLocaleString('id-ID')}
+                  </span>
+                </div>
                 <input 
                   type="range" 
-                  min="20000" 
+                  min="10000" 
                   max="5000000" 
                   step="10000"
                   value={estimatedPrice}
                   onChange={(e) => setEstimatedPrice(Number(e.target.value))}
                   className="calc-range-slider"
                 />
-                <div className="slider-value-tag text-amber">
-                  Rp {estimatedPrice.toLocaleString('id-ID')}
-                </div>
               </div>
 
               <div className="form-group mb-3">
-                <label>Estimasi Penjualan per Bulan (Unit):</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-sm font-semibold">Estimasi Penjualan per Bulan:</label>
+                  <span className="slider-value-tag text-amber font-mono font-bold">
+                    {estimatedQty} Unit
+                  </span>
+                </div>
                 <input 
                   type="range" 
                   min="1" 
@@ -109,9 +148,6 @@ export default function WorkflowDemo({ onOpenUpload }) {
                   onChange={(e) => setEstimatedQty(Number(e.target.value))}
                   className="calc-range-slider"
                 />
-                <div className="slider-value-tag text-amber">
-                  {estimatedQty} Unit / Bulan
-                </div>
               </div>
             </div>
 
@@ -124,12 +160,12 @@ export default function WorkflowDemo({ onOpenUpload }) {
 
               <div className="result-metric-row">
                 <span className="metric-label">Potongan Biaya Admin Marketplace:</span>
-                <strong className="metric-val text-green">Rp 0 (GRATIS 0%)</strong>
+                <strong className="metric-val text-green font-bold">Rp 0 (GRATIS 0%)</strong>
               </div>
 
               <div className="result-metric-row highlight-row">
                 <span className="metric-label">Penghasilan Bersih Anda:</span>
-                <strong className="metric-val text-amber text-2xl">
+                <strong className="metric-val text-amber text-2xl font-mono">
                   Rp {netEarnings.toLocaleString('id-ID')}
                 </strong>
               </div>

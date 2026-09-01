@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store, Globe, Share2, MessageCircle, ShieldCheck, Heart, MapPin, Cloud, Database } from 'lucide-react';
+import { Store, Globe, Share2, MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/whatsapp';
 
 export default function Footer({ onOpenUpload, isCloudConnected = false }) {

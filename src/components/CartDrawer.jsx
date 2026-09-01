@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   X, ShoppingBag, Trash2, Plus, Minus, ArrowRight, 
-  PhoneCall, ShieldCheck, MapPin, Sparkles, MessageCircle 
+  MapPin, MessageCircle 
 } from 'lucide-react';
 import { getCartCheckoutWhatsAppUrl } from '../config/whatsapp';
 
@@ -41,9 +41,25 @@ export default function CartDrawer({
             <ShoppingBag className="text-amber" size={22} />
             <h3>Keranjang Belanja ({cartItems.reduce((a, b) => a + b.quantity, 0)})</h3>
           </div>
-          <button className="cart-close-btn" onClick={onClose} aria-label="Tutup Keranjang">
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            {cartItems.length > 0 && onClearCart && (
+              <button 
+                type="button"
+                className="btn-text-reset text-xs text-muted"
+                onClick={() => {
+                  if (window.confirm('Kosongkan semua produk dari keranjang?')) {
+                    onClearCart();
+                  }
+                }}
+                title="Kosongkan Keranjang"
+              >
+                Kosongkan
+              </button>
+            )}
+            <button className="cart-close-btn" onClick={onClose} aria-label="Tutup Keranjang">
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Content */}

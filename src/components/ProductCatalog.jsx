@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  Search, Filter, SlidersHorizontal, Tag, 
+  Search,
   MapPin, User, Star, ShoppingBag, Eye, 
   Plus, Sparkles, Trash2, ArrowUpDown, RefreshCw, MessageCircle,
-  Cloud, CloudCheck, Loader2
+  Loader2, Flame
 } from 'lucide-react';
 import { CATEGORIES } from '../config/marketplaceData';
 import { getProductWhatsAppUrl } from '../config/whatsapp';
@@ -314,6 +314,12 @@ export default function ProductCatalog({
                     )}
 
                     <div className="badge-condition-pill">{product.condition}</div>
+
+                    {product.isFeatured && (
+                      <div className="badge-featured-gold">
+                        <Flame size={11} className="inline mr-1" /> Featured
+                      </div>
+                    )}
 
                     {product.isUserUploaded && (
                       <div className="badge-user-upload">

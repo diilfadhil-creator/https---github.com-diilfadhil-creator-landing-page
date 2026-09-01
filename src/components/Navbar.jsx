@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Store, ShoppingBag, Plus, Menu, X, 
-  Sparkles, Search, MessageCircle, ArrowRight, Cloud, CloudCheck
-} from 'lucide-react';
-import { getWhatsAppUrl } from '../config/whatsapp';
+import { Store, ShoppingBag, Plus, Menu, X } from 'lucide-react';
 
 export default function Navbar({ onOpenUpload, onOpenCart, cartCount = 0, isCloudConnected = false }) {
   const [scrolled, setScrolled] = useState(false);
@@ -28,7 +24,9 @@ export default function Navbar({ onOpenUpload, onOpenCart, cartCount = 0, isClou
           </div>
           <span className="logo-text">
             Market<span className="gradient-text-food">place</span>
-            <span className="logo-badge badge-halal">0% ADMIN FEE</span>
+            <span className="logo-badge badge-halal">
+              {isCloudConnected ? '☁️ CLOUD LIVE' : '0% ADMIN FEE'}
+            </span>
           </span>
         </a>
 

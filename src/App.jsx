@@ -35,6 +35,14 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const isCloud = isCloudConnected();
 
+  // Show Toast
+  const showToast = useCallback((msg) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage('');
+    }, 3500);
+  }, []);
+
   // Muat data produk dari Cloud Database / LocalStorage
   const loadProducts = useCallback(async () => {
     setIsLoading(true);
@@ -72,15 +80,7 @@ export default function App() {
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
     };
-  }, [loadProducts]);
-
-  // Show Toast
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage('');
-    }, 3500);
-  };
+  }, [loadProducts, showToast]);
 
   // Upload Produk Baru
   const handleProductUploaded = async (newProduct) => {

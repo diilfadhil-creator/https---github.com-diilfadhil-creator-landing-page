@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { 
   Sparkles, Plus, ShoppingBag, CheckCircle2, 
-  Store, ArrowRight, ShieldCheck, Zap, TrendingUp, Tag, Star
+  Store, ShieldCheck, Zap, TrendingUp, Star,
+  Flame
 } from 'lucide-react';
-import { PRESET_IMAGES } from '../config/marketplaceData';
 
 export default function Hero({ onOpenUpload }) {
   const [activeSpotlight, setActiveSpotlight] = useState(0);
@@ -57,7 +57,7 @@ export default function Hero({ onOpenUpload }) {
             <span className="badge-dot pulse-amber"></span>
             <span className="text-amber font-bold">PLATFORM JUAL BELI BEBAS ADMIN 0%</span>
             <span className="badge-divider">|</span>
-            <span className="badge-action">Upload Produk Hanya 1 Menit <Sparkles size={14} /></span>
+            <span className="badge-action">Upload Produk Cepat & Praktis <Sparkles size={14} /></span>
           </div>
         </div>
 
@@ -69,7 +69,7 @@ export default function Hero({ onOpenUpload }) {
 
         {/* Subtitle */}
         <p className="hero-subtitle">
-          Marketplace terbuka terlengkap untuk siapa saja. Unggah produk Anda sendiri, pasang harga terbaik, dan terima transaksi langsung dari pembeli melalui WhatsApp tanpa biaya potongan!
+          Marketplace terbuka terlengkap untuk siapa saja. Unggah produk Anda sendiri, pasang harga terbaik, dan terima transaksi langsung dari pembeli melalui WhatsApp tanpa potongan biaya sepeser pun!
         </p>
 
         {/* CTA Buttons */}
@@ -79,7 +79,7 @@ export default function Hero({ onOpenUpload }) {
             onClick={onOpenUpload}
           >
             <Plus size={20} />
-            <span>+ Mulai Jual Produk Anda (Gratis)</span>
+            <span>+ Mulai Jual Produk (Gratis 0%)</span>
           </button>
           
           <a href="#katalog" className="btn btn-secondary btn-lg">
@@ -113,10 +113,21 @@ export default function Hero({ onOpenUpload }) {
           
           <div className="product-showcase-grid">
             
-            {/* Left: Showcase Visual */}
+            {/* Left: Showcase Visual with Floating Micro Badges */}
             <div className="product-preview-stage">
               <div className="hero-spotlight-card glass-panel">
                 <div className="spotlight-badge-top">{current.badge}</div>
+                
+                {/* Floating Achievement Badges */}
+                <div className="hero-floating-badge badge-float-top-right">
+                  <Flame size={14} className="text-amber" />
+                  <span>0% Admin Fee</span>
+                </div>
+                <div className="hero-floating-badge badge-float-bottom-left">
+                  <Star size={14} fill="#f59e0b" color="#f59e0b" />
+                  <span>Rating 4.9/5</span>
+                </div>
+
                 <img src={current.image} alt={current.title} className="spotlight-image" />
                 <div className="spotlight-overlay-info">
                   <h4>{current.title}</h4>

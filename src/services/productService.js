@@ -3,8 +3,7 @@ import {
   getStoredProducts, 
   saveProductsToStorage, 
   addProductToStorage, 
-  deleteProductFromStorage,
-  INITIAL_PRODUCTS
+  deleteProductFromStorage
 } from '../config/marketplaceData';
 
 /**
